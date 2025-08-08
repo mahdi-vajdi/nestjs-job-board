@@ -18,7 +18,7 @@ export const source2Config = registerAs<
 >(SOURCE_2_CONFIG_TOKEN, () => {
   const { error, value } = source2ConfigValidator.validate(
     {
-      url: env.SOURCE_2_BASE_URL,
+      url: env.SOURCE_2_URL,
     },
     {
       abortEarly: false,

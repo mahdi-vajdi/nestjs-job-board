@@ -1,0 +1,17 @@
+import { IdentifiableEntity } from '@common/entities/identifiable-entity.interface';
+import { TimestampedEntity } from '@common/entities/timestamped-entity.interface';
+import { SoftDeletableEntity } from '@common/entities/soft-deletable-entity.interface';
+import { IJobEntity } from './job.model';
+
+export interface ICompensation {
+  salaryMin: number;
+  salaryMax: number;
+  salaryCurrency: string;
+  job: Partial<IJobEntity>;
+}
+
+export interface ICompensationEntity
+  extends ICompensation,
+    IdentifiableEntity,
+    TimestampedEntity,
+    SoftDeletableEntity {}

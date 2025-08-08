@@ -3,13 +3,13 @@ import { ConfigFactory, registerAs } from '@nestjs/config';
 import { env } from 'node:process';
 
 export interface Source1Config {
-  baseUrl: string;
+  url: string;
 }
 
 export const SOURCE_1_CONFIG_TOKEN = 'source-1-config-token';
 
 const source1ConfigValidator = Joi.object<Source1Config>({
-  baseUrl: Joi.string().uri().required(),
+  url: Joi.string().uri().required(),
 });
 
 export const source1Config = registerAs<
@@ -18,7 +18,7 @@ export const source1Config = registerAs<
 >(SOURCE_1_CONFIG_TOKEN, () => {
   const { error, value } = source1ConfigValidator.validate(
     {
-      baseUrl: env.SOURCE_1_BASE_URL,
+      url: env.SOURCE_1_URL,
     },
     {
       abortEarly: false,

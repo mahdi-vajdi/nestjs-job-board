@@ -6,6 +6,7 @@ import { LoggerModule } from '@common/logger/logger.module';
 import {
   IPostgresConfig,
   POSTGRES_CONFIG_TOKEN,
+  postgresConfig,
 } from '@infrastructure/database/postgres/configs/postgres.config';
 import { DatabaseType } from './database-type.enum';
 import { LOGGER_PROVIDER } from '@common/logger/provider/logger.provider';
@@ -16,7 +17,7 @@ export class DatabaseModule {
     const imports: any[] = [ConfigModule];
 
     const postgresImport = TypeOrmModule.forRootAsync({
-      imports: [ConfigModule, LoggerModule],
+      imports: [ConfigModule.forFeature(postgresConfig), LoggerModule],
       name: DatabaseType.POSTGRES,
       useFactory: (configService: ConfigService, logger: TypeOrmLogger) => {
         const postgresConfig = configService.get<IPostgresConfig>(
@@ -35,7 +36,7 @@ export class DatabaseModule {
           migrations: ['**/dist/**/postgres/**/**.migration{.ts,.js}'],
           migrationsRun: true,
           migrationsTableName: 'typeorm_migrations',
-          synchronize: false,
+          synchronize: true,
           logging: postgresConfig.log,
           logger: logger,
           maxQueryExecutionTime: postgresConfig.slowQueryLimit,
