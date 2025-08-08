@@ -4,7 +4,7 @@ import { Logger as TypeOrmLogger } from 'typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LoggerModule } from '@common/logger/logger.module';
 import {
-  IPostgresConfig,
+  PostgresConfig,
   POSTGRES_CONFIG_TOKEN,
   postgresConfig,
 } from '@infrastructure/database/postgres/configs/postgres.config';
@@ -20,7 +20,7 @@ export class DatabaseModule {
       imports: [ConfigModule.forFeature(postgresConfig), LoggerModule],
       name: DatabaseType.POSTGRES,
       useFactory: (configService: ConfigService, logger: TypeOrmLogger) => {
-        const postgresConfig = configService.get<IPostgresConfig>(
+        const postgresConfig = configService.get<PostgresConfig>(
           POSTGRES_CONFIG_TOKEN,
         );
 

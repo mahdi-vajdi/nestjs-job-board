@@ -1,7 +1,7 @@
 import { ConfigFactory, registerAs } from '@nestjs/config';
 import * as Joi from 'joi';
 
-export interface IPostgresConfig {
+export interface PostgresConfig {
   host: string;
   port: number;
   username: string;
@@ -13,7 +13,7 @@ export interface IPostgresConfig {
 
 export const POSTGRES_CONFIG_TOKEN = 'postgres-config-token';
 
-const postgresConfigSchema = Joi.object<IPostgresConfig>({
+const postgresConfigSchema = Joi.object<PostgresConfig>({
   host: Joi.string().required(),
   port: Joi.number().port().required(),
   username: Joi.string().required(),
@@ -24,8 +24,8 @@ const postgresConfigSchema = Joi.object<IPostgresConfig>({
 });
 
 export const postgresConfig = registerAs<
-  IPostgresConfig,
-  ConfigFactory<IPostgresConfig>
+  PostgresConfig,
+  ConfigFactory<PostgresConfig>
 >(POSTGRES_CONFIG_TOKEN, () => {
   const { error, value } = postgresConfigSchema.validate(
     {
