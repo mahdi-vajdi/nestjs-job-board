@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { JobEntity } from './job.entity';
+import { IEmployer, IEmployerEntity } from '../../../models/employer.entity';
 
 @Entity()
 export class EmployerEntity {
@@ -34,4 +35,31 @@ export class EmployerEntity {
 
   @OneToMany(() => JobEntity, (job) => job.employer)
   jobs: JobEntity[];
+
+  static fromIEmployer(iEmployer: IEmployer): EmployerEntity {
+    if (!iEmployer) return null;
+
+    const employerEntity = new EmployerEntity();
+
+    employerEntity.name = iEmployer.name;
+    employerEntity.industry = iEmployer.industry;
+    employerEntity.website = iEmployer.website;
+
+    return employerEntity;
+  }
+
+  static toIEmployerEntity(employerEntity: EmployerEntity): IEmployerEntity {
+    if (!employerEntity) return null;
+
+    return {
+      id: employerEntity.id,
+      name: employerEntity.name,
+      industry: employerEntity.industry,
+      website: employerEntity.website,
+      jobs: employerEntity.jobs.map((job) => JobEntity.toIJobEntity(job)),
+      createdAt: employerEntity.createdAt,
+      updatedAt: employerEntity.updatedAt,
+      deletedAt: employerEntity.deletedAt,
+    };
+  }
 }

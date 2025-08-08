@@ -13,6 +13,7 @@ import { EmployerEntity } from './employer.entity';
 import { CompensationEntity } from './compensation.entity';
 import { RequirementEntity } from './requirement.entity';
 import { LocationEntity } from './location.entity';
+import { IJob, IJobEntity } from '../../../models/job.model';
 
 @Entity()
 export class JobEntity {
@@ -82,4 +83,54 @@ export class JobEntity {
   })
   @JoinColumn({ name: 'location_id' })
   location: LocationEntity;
+
+  static fromIJob(iJob: IJob): JobEntity {
+    if (!iJob) return null;
+
+    const jobEntity = new JobEntity();
+
+    jobEntity.originalId = iJob.originalId;
+    jobEntity.positionTitle = iJob.positionTitle;
+    jobEntity.type = iJob.type;
+    jobEntity.datePosted = iJob.datePosted;
+    jobEntity.remote = iJob.remote;
+
+    return jobEntity;
+  }
+
+  static toIJobEntity(jobEntity: JobEntity): IJobEntity {
+    if (!jobEntity) return null;
+
+    return {
+      id: jobEntity.id,
+      originalId: jobEntity.originalId,
+      positionTitle: jobEntity.positionTitle,
+      type: jobEntity.type,
+      datePosted: jobEntity.datePosted,
+      remote: jobEntity.remote,
+      employer: jobEntity.employer
+        ? EmployerEntity.toIEmployerEntity(jobEntity.employer)
+        : {
+            id: jobEntity.employerId,
+          },
+      compensation: jobEntity.compensation
+        ? CompensationEntity.toICompensationEntity(jobEntity.compensation)
+        : {
+            id: jobEntity.compensationId,
+          },
+      requirement: jobEntity.requirement
+        ? RequirementEntity.toIRequirementEntity(jobEntity.requirement)
+        : {
+            id: jobEntity.requirementId,
+          },
+      location: jobEntity.location
+        ? LocationEntity.toILocationEntity(jobEntity.location)
+        : {
+            id: jobEntity.locationId,
+          },
+      createdAt: jobEntity.createdAt,
+      updatedAt: jobEntity.updatedAt,
+      deletedAt: jobEntity.deletedAt,
+    };
+  }
 }

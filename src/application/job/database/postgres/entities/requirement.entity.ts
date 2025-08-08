@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { JobEntity } from './job.entity';
+import { IRequirementEntity } from '../../../models/requirement.model';
 
 @Entity()
 export class RequirementEntity {
@@ -39,4 +40,32 @@ export class RequirementEntity {
   })
   @JoinColumn({ name: 'job_id' })
   job: JobEntity;
+
+  static fromIRequirement(iRequirement: any): RequirementEntity {
+    if (!iRequirement) return null;
+
+    const requirementEntity = new RequirementEntity();
+
+    requirementEntity.jobId = iRequirement.job.id;
+    requirementEntity.experienceYears = iRequirement.experienceYears;
+    requirementEntity.skills = iRequirement.skills;
+
+    return requirementEntity;
+  }
+
+  static toIRequirementEntity(
+    requirementEntity: RequirementEntity,
+  ): IRequirementEntity {
+    if (!requirementEntity) return null;
+
+    return {
+      id: requirementEntity.id,
+      experienceYears: requirementEntity.experienceYears,
+      skills: requirementEntity.skills,
+      job: JobEntity.toIJobEntity(requirementEntity.job),
+      createdAt: requirementEntity.createdAt,
+      updatedAt: requirementEntity.updatedAt,
+      deletedAt: requirementEntity.deletedAt,
+    };
+  }
 }

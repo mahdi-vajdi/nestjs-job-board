@@ -9,6 +9,10 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { JobEntity } from './job.entity';
+import {
+  ICompensation,
+  ICompensationEntity,
+} from '../../../models/compensation.model';
 
 @Entity()
 export class CompensationEntity {
@@ -39,4 +43,38 @@ export class CompensationEntity {
   @OneToOne(() => JobEntity, (job) => job.compensation)
   @JoinColumn({ name: 'job_id' })
   job: JobEntity;
+
+  static fromICompensation(iCompensation: ICompensation): CompensationEntity {
+    if (!iCompensation) return null;
+
+    const compensationEntity = new CompensationEntity();
+
+    compensationEntity.jobId = iCompensation.job.id;
+    compensationEntity.salaryMin = iCompensation.salaryMin;
+    compensationEntity.salaryMax = iCompensation.salaryMax;
+    compensationEntity.salaryCurrency = iCompensation.salaryCurrency;
+
+    return compensationEntity;
+  }
+
+  static toICompensationEntity(
+    compensationEntity: CompensationEntity,
+  ): ICompensationEntity {
+    if (!compensationEntity) return null;
+
+    return {
+      id: compensationEntity.id,
+      salaryMin: compensationEntity.salaryMin,
+      salaryMax: compensationEntity.salaryMax,
+      salaryCurrency: compensationEntity.salaryCurrency,
+      job: compensationEntity.job
+        ? JobEntity.toIJobEntity(compensationEntity.job)
+        : {
+            id: compensationEntity.jobId,
+          },
+      createdAt: compensationEntity.createdAt,
+      updatedAt: compensationEntity.updatedAt,
+      deletedAt: compensationEntity.deletedAt,
+    };
+  }
 }

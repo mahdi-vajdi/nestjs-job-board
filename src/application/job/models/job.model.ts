@@ -1,10 +1,10 @@
-import { EmployerEntity } from '../database/postgres/entities/employer.entity';
-import { CompensationEntity } from '../database/postgres/entities/compensation.entity';
-import { RequirementEntity } from '../database/postgres/entities/requirement.entity';
-import { LocationEntity } from '../database/postgres/entities/location.entity';
 import { IdentifiableEntity } from '@common/entities/identifiable-entity.interface';
 import { TimestampedEntity } from '@common/entities/timestamped-entity.interface';
 import { SoftDeletableEntity } from '@common/entities/soft-deletable-entity.interface';
+import { ICompensationEntity } from './compensation.model';
+import { IRequirementEntity } from './requirement.model';
+import { ILocationEntity } from './location.model';
+import { IEmployerEntity } from './employer.entity';
 
 export interface IJob {
   originalId: string;
@@ -12,10 +12,10 @@ export interface IJob {
   type: string;
   datePosted: Date;
   remote: boolean | null;
-  employer: Partial<EmployerEntity>[];
-  compensation: Partial<CompensationEntity>[];
-  requirement: Partial<RequirementEntity>[];
-  location: Partial<LocationEntity>[];
+  employer: Partial<IEmployerEntity>;
+  compensation: Partial<ICompensationEntity>;
+  requirement: Partial<IRequirementEntity>;
+  location: Partial<ILocationEntity>;
 }
 
 export interface IJobEntity

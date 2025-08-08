@@ -1,11 +1,11 @@
-import { JobEntity } from '../database/postgres/entities/job.entity';
 import { IdentifiableEntity } from '@common/entities/identifiable-entity.interface';
 import { TimestampedEntity } from '@common/entities/timestamped-entity.interface';
 import { SoftDeletableEntity } from '@common/entities/soft-deletable-entity.interface';
+import { IJobEntity } from './job.model';
 
 export interface IRequirement {
   experienceYears: number;
-  job: Partial<JobEntity>;
+  job: Partial<IJobEntity>;
   skills: string[];
 }
 

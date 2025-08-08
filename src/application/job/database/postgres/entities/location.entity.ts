@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { JobEntity } from './job.entity';
+import { ILocation, ILocationEntity } from '../../../models/location.model';
 
 @Entity()
 @Unique(['city', 'state'])
@@ -33,4 +34,28 @@ export class LocationEntity {
 
   @OneToMany(() => JobEntity, (job) => job.location)
   jobs: JobEntity[];
+
+  static fromILocation(iLocation: ILocation): LocationEntity {
+    if (!iLocation) return null;
+
+    const locationEntity = new LocationEntity();
+    locationEntity.city = iLocation.city;
+    locationEntity.state = iLocation.state;
+
+    return locationEntity;
+  }
+
+  static toILocationEntity(locationEntity: LocationEntity): ILocationEntity {
+    if (!locationEntity) return null;
+
+    return {
+      id: locationEntity.id,
+      city: locationEntity.city,
+      state: locationEntity.state,
+      jobs: locationEntity.jobs.map((job) => JobEntity.toIJobEntity(job)),
+      createdAt: locationEntity.createdAt,
+      updatedAt: locationEntity.updatedAt,
+      deletedAt: locationEntity.deletedAt,
+    };
+  }
 }
