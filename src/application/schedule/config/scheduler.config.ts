@@ -18,7 +18,8 @@ export const schedulerConfig = registerAs<
 >(SCHEDULER_CONFIG_TOKEN, () => {
   const { error, value } = schedulerConfigSchema.validate(
     {
-      externalApiCronPattern: env.SCHEDULER_FETCH_EXTERNAL_API_CRON_PATTERN,
+      fetchExternalApiCronPattern:
+        env.SCHEDULER_FETCH_EXTERNAL_API_CRON_PATTERN,
     },
     {
       allowUnknown: false,

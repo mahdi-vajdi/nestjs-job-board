@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { JobModule } from './application/job/job.module';
 import { ConfigModule } from '@nestjs/config';
 import { appConfig } from './app.config';
+import { SchedulerModule } from './application/schedule/scheduler.module';
+import { PresentationModule } from './presentation/presentation.module';
 
 @Module({
   imports: [
@@ -10,7 +12,8 @@ import { appConfig } from './app.config';
       cache: true,
       load: [appConfig],
     }),
-    JobModule,
+    SchedulerModule,
+    PresentationModule,
   ],
   controllers: [],
   providers: [],

@@ -13,6 +13,10 @@ import {
 } from '../query-client/providers/external-api.provider';
 import { IEmployer, IEmployerEntity } from '../models/employer.entity';
 import { ILocation } from '../models/location.model';
+import { GetJobOfferList } from '@job/service/dto/get-job-offer-list.dto';
+import { IPaginatedResult } from '@common/pagination/pagination.model';
+import { IJobEntity } from '@job/models/job.model';
+import { PaginatedResult } from '@common/pagination/paginated-result';
 
 @Injectable()
 export class JobService {
@@ -69,6 +73,27 @@ export class JobService {
       }
     } catch (e) {
       this.logger.error(`error processing jobs from external APIs: ${e}`);
+      throw e;
+    }
+  }
+
+  async getJobOfferList(
+    dto: GetJobOfferList,
+  ): Promise<IPaginatedResult<IJobEntity>> {
+    try {
+      const [res, count] = await this.jobDatabaseReader.getJobOfferList({
+        limitation: dto.limitation,
+        sortBy: dto.sortBy,
+        sortOrder: dto.sortOrder,
+        state: dto.state,
+        city: dto.city,
+        salaryMin: dto.salaryMin,
+        salaryMax: dto.salaryMax,
+      });
+
+      return new PaginatedResult(res, count, dto.limitation);
+    } catch (e) {
+      this.logger.error(`error getting job offer list: ${e}`);
       throw e;
     }
   }

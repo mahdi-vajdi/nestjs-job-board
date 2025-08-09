@@ -16,6 +16,11 @@ import { JobEntity } from '../entities/job.entity';
 import { CompensationEntity } from '../entities/compensation.entity';
 import { RequirementEntity } from '../entities/requirement.entity';
 import { DatabaseType } from '@infrastructure/database/database-type.enum';
+import {
+  GetJobOfferListOptions,
+  GetJobOfferListSortBy,
+} from '@job/database/providers/options/get-job-offer-list.options';
+import { SortOrder } from '@common/enums/sort-order.enum';
 
 @Injectable()
 export class JobPostgresService
@@ -105,13 +110,13 @@ export class JobPostgresService
         const getJob = await entityManager
           .getRepository(JobEntity)
           .createQueryBuilder('j')
+          .leftJoinAndSelect('j.requirement', 'r')
+          .leftJoinAndSelect('j.compensation', 'c')
           .where('j.originalId = :originalId', { originalId: iJob.originalId })
           .getOne();
 
         if (getJob) {
-          throw new Error(
-            `job with original ID ${iJob.originalId} already exists`,
-          );
+          return getJob;
         }
 
         const createJob = await entityManager
@@ -139,5 +144,68 @@ export class JobPostgresService
         throw e;
       }
     });
+  }
+
+  async getJobOfferList(
+    options: GetJobOfferListOptions,
+  ): Promise<[IJobEntity[], number]> {
+    try {
+      const query = this.jobRepository
+        .createQueryBuilder('j')
+        .leftJoinAndSelect('j.compensation', 'c')
+        .leftJoinAndSelect('j.location', 'l')
+        .leftJoinAndSelect('j.employer', 'e')
+        .leftJoinAndSelect('j.requirement', 'r');
+
+      if (options.jobTitle) {
+        query.andWhere('j.positionTitle = :jobTitle', {
+          jobTitle: options.jobTitle,
+        });
+      }
+
+      if (options.salaryMin) {
+        query.andWhere('c.salary_min > :salaryMin', {
+          salaryMin: options.salaryMin,
+        });
+      }
+
+      if (options.salaryMax) {
+        query.andWhere('c.salary_max < :salaryMax', {
+          salaryMax: options.salaryMax,
+        });
+      }
+
+      if (options.state) {
+        query.andWhere('l.state = :state', { state: options.state });
+      }
+
+      if (options.city) {
+        query.andWhere('l.city = :city', { city: options.city });
+      }
+
+      if (options.sortBy) {
+        const sortOder = options.sortOrder ?? SortOrder.DESC;
+        switch (options.sortBy) {
+          case GetJobOfferListSortBy.DATE:
+            query.orderBy('j.date_posted', sortOder);
+            break;
+          case GetJobOfferListSortBy.SALARY:
+            if (sortOder == 'DESC') query.orderBy('c.salary_max', sortOder);
+            else query.orderBy('c.salary_min', sortOder);
+            break;
+        }
+      }
+
+      if (options.limitation) {
+        query.offset(options.limitation.skip).limit(options.limitation.limit);
+      }
+
+      const [res, count] = await query.getManyAndCount();
+
+      return [res.map((job) => JobEntity.toIJobEntity(job)), count];
+    } catch (e) {
+      this.logger.error(`error getting job offers list: ${e}`);
+      throw e;
+    }
   }
 }

@@ -23,6 +23,9 @@
       ],
       "@infrastructure/*": [
         "src/infrastructure/*"
+      ],
+      "@job/*": [
+        "src/application/job/*"
       ]
     }
   }
