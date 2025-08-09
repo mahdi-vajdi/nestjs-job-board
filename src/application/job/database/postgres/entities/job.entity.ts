@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToOne,
@@ -21,6 +22,7 @@ export class JobEntity {
   id: string;
 
   @Column({ type: 'varchar', length: 191, unique: true })
+  @Index()
   originalId: string;
 
   @Column({ name: 'employer_id', type: 'bigint' })
@@ -36,6 +38,7 @@ export class JobEntity {
   locationId: string;
 
   @Column({ name: 'position_title', type: 'varchar', length: 255 })
+  @Index()
   positionTitle: string;
 
   @Column({ type: 'varchar', length: 50 })

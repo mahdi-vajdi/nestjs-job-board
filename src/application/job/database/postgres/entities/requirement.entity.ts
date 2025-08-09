@@ -3,13 +3,14 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { JobEntity } from './job.entity';
-import { IRequirementEntity } from '../../../models/requirement.model';
+import { IRequirementEntity } from '@job/models/requirement.model';
 
 @Entity()
 export class RequirementEntity {

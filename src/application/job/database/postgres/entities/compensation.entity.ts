@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -12,7 +13,7 @@ import { JobEntity } from './job.entity';
 import {
   ICompensation,
   ICompensationEntity,
-} from '../../../models/compensation.model';
+} from '@job/models/compensation.model';
 
 @Entity()
 export class CompensationEntity {
@@ -23,9 +24,11 @@ export class CompensationEntity {
   jobId: string;
 
   @Column({ name: 'salary_min', type: 'int' })
+  @Index()
   salaryMin: number;
 
   @Column({ name: 'salary_max', type: 'int' })
+  @Index()
   salaryMax: number;
 
   @Column({ name: 'salary_currency', type: 'varchar', length: 10 })

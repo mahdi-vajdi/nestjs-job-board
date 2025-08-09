@@ -3,12 +3,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { JobEntity } from './job.entity';
-import { IEmployer, IEmployerEntity } from '../../../models/employer.entity';
+import { IEmployer, IEmployerEntity } from '@job/models/employer.entity';
 
 @Entity()
 export class EmployerEntity {
@@ -16,6 +17,7 @@ export class EmployerEntity {
   id: string;
 
   @Column({ type: 'varchar', length: 255 })
+  @Index()
   name: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })

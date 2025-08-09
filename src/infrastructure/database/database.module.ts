@@ -4,8 +4,8 @@ import { Logger as TypeOrmLogger } from 'typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LoggerModule } from '@common/logger/logger.module';
 import {
-  PostgresConfig,
   POSTGRES_CONFIG_TOKEN,
+  PostgresConfig,
   postgresConfig,
 } from '@infrastructure/database/postgres/configs/postgres.config';
 import { DatabaseType } from './database-type.enum';
@@ -36,7 +36,7 @@ export class DatabaseModule {
           migrations: [__dirname + '/../../**/*.migration{.ts,.js}'],
           migrationsRun: true,
           migrationsTableName: 'typeorm_migrations',
-          synchronize: true,
+          synchronize: false,
           logging: postgresConfig.log,
           logger: logger,
           maxQueryExecutionTime: postgresConfig.slowQueryLimit,

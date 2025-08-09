@@ -3,13 +3,14 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   OneToMany,
   PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import { JobEntity } from './job.entity';
-import { ILocation, ILocationEntity } from '../../../models/location.model';
+import { ILocation, ILocationEntity } from '@job/models/location.model';
 
 @Entity()
 @Unique(['city', 'state'])
@@ -18,9 +19,11 @@ export class LocationEntity {
   id: string;
 
   @Column({ type: 'varchar', length: 255 })
+  @Index()
   city: string;
 
   @Column({ type: 'varchar', length: 10 })
+  @Index()
   state: string;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
