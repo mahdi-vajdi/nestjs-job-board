@@ -4,10 +4,10 @@ import { SoftDeletableEntity } from '@common/entities/soft-deletable-entity.inte
 import { IJobEntity } from './job.model';
 
 export interface ICompensation {
+  job: Partial<IJobEntity>;
   salaryMin: number;
   salaryMax: number;
   salaryCurrency: string;
-  job: Partial<IJobEntity>;
 }
 
 export interface ICompensationEntity

@@ -7,7 +7,7 @@ export interface IEmployer {
   name: string;
   industry: string | null;
   website: string | null;
-  jobs: Partial<IJobEntity>[];
+  jobs?: Partial<IJobEntity>[];
 }
 
 export interface IEmployerEntity

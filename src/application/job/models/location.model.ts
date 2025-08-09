@@ -4,10 +4,9 @@ import { SoftDeletableEntity } from '@common/entities/soft-deletable-entity.inte
 import { IJobEntity } from './job.model';
 
 export interface ILocation {
-  id: string;
   city: string;
   state: string;
-  jobs: Partial<IJobEntity>[];
+  jobs?: Partial<IJobEntity>[];
 }
 
 export interface ILocationEntity

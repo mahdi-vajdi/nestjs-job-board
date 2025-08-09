@@ -4,9 +4,9 @@ import { SoftDeletableEntity } from '@common/entities/soft-deletable-entity.inte
 import { IJobEntity } from './job.model';
 
 export interface IRequirement {
-  experienceYears: number;
   job: Partial<IJobEntity>;
   skills: string[];
+  experienceYears: number;
 }
 
 export interface IRequirementEntity

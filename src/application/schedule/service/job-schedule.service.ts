@@ -6,6 +6,7 @@ import {
 } from '../config/scheduler.config';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
+import { JobService } from '../../job/service/job.service';
 
 @Injectable()
 export class JobScheduleService implements OnModuleInit {
@@ -15,13 +16,16 @@ export class JobScheduleService implements OnModuleInit {
   constructor(
     configService: ConfigService,
     private readonly schedulerRegistry: SchedulerRegistry,
+    private readonly jobService: JobService,
   ) {
     this.config = configService.get<SchedulerConfig>(SCHEDULER_CONFIG_TOKEN);
   }
 
   onModuleInit() {
     const cronPattern = this.config.fetchExternalApiCronPattern;
-    const job = new CronJob(cronPattern, () => this.fetchJobsFromExternalApi());
+    const job = new CronJob(cronPattern, () =>
+      this.jobService.processJobsFromExternalApis(),
+    );
     this.schedulerRegistry.addCronJob('fetch-jobs-from-external-api', job);
     job.start();
 
@@ -29,6 +33,4 @@ export class JobScheduleService implements OnModuleInit {
       `fetchJobsFromExternalApi scheduled with pattern: ${cronPattern}`,
     );
   }
-
-  async fetchJobsFromExternalApi(): Promise<void> {}
 }

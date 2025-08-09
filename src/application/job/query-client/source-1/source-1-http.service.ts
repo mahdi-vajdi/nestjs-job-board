@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ExternalApiProvider } from '../providers/external-api.provider';
 import { ExternalJob } from '../models/external-api-job.model';
@@ -6,10 +6,11 @@ import { ConfigService } from '@nestjs/config';
 import { Source2Config } from '../source-2/config/source-2.config';
 import { SOURCE_1_CONFIG_TOKEN } from './config/source-1.config';
 import { Source1ApiResponse } from './models/source-1-response.model';
-import { lastValueFrom } from 'rxjs';
+import { catchError, lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class Source1HttpService implements ExternalApiProvider {
+  private readonly logger = new Logger(Source1HttpService.name);
   private readonly config: Source2Config;
 
   constructor(
@@ -21,7 +22,12 @@ export class Source1HttpService implements ExternalApiProvider {
 
   async getJobs(): Promise<ExternalJob[]> {
     const res = await lastValueFrom(
-      this.httpService.get<Source1ApiResponse>(this.config.url),
+      this.httpService.get<Source1ApiResponse>(this.config.url).pipe(
+        catchError((error) => {
+          this.logger.error(`error getting jobs data from source 1: ${error}`);
+          throw error;
+        }),
+      ),
     );
 
     return res.data.jobs.map((job): ExternalJob => {

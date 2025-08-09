@@ -12,10 +12,10 @@ export interface IJob {
   type: string;
   datePosted: Date;
   remote: boolean | null;
-  employer: Partial<IEmployerEntity>;
-  compensation: Partial<ICompensationEntity>;
-  requirement: Partial<IRequirementEntity>;
   location: Partial<ILocationEntity>;
+  employer: Partial<IEmployerEntity>;
+  requirement?: Partial<IRequirementEntity>;
+  compensation?: Partial<ICompensationEntity>;
 }
 
 export interface IJobEntity
