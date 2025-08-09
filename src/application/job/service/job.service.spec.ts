@@ -123,7 +123,13 @@ describe('JobService', () => {
         industry: 'Tech',
         website: 'google.com',
       };
-      const employerEntity: IEmployerEntity = { ...employer, id: '1' };
+      const employerEntity: IEmployerEntity = {
+        ...employer,
+        id: '1',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
+      };
       mockJobDatabaseReader.getEmployer.mockResolvedValue(employerEntity);
 
       const result = await service.getOrCreateEmployer(employer);
@@ -141,7 +147,13 @@ describe('JobService', () => {
         industry: 'Tech',
         website: 'fb.com',
       };
-      const employerEntity: IEmployerEntity = { ...employer, id: '2' };
+      const employerEntity: IEmployerEntity = {
+        ...employer,
+        id: '2',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
+      };
       mockJobDatabaseReader.getEmployer.mockResolvedValue(null);
       mockJobDatabaseWriter.createEmployer.mockResolvedValue(employerEntity);
 
@@ -160,7 +172,7 @@ describe('JobService', () => {
   describe('getJobOfferList', () => {
     it('should return a paginated list of job offers', async () => {
       const dto: GetJobOfferList = {
-        limitation: { page: 1, limit: 10 },
+        limitation: { limit: 10, skip: 0 },
       };
       const jobs: IJobEntity[] = [
         { id: '1', positionTitle: 'SWE' } as IJobEntity,
@@ -171,7 +183,7 @@ describe('JobService', () => {
       const result = await service.getJobOfferList(dto);
 
       expect(result).toBeInstanceOf(PaginatedResult);
-      expect(result.data).toEqual(jobs);
+      expect(result.list).toEqual(jobs);
       expect(result.total).toEqual(count);
       expect(mockJobDatabaseReader.getJobOfferList).toHaveBeenCalledWith({
         limitation: dto.limitation,
@@ -196,7 +208,11 @@ describe('JobService', () => {
           remote: true,
         },
         location: { state: 'California', city: 'Mountain View' },
-        employer: { name: 'Google', industry: 'Tech', website: 'google.com' },
+        employer: {
+          name: 'Google',
+          industry: 'Tech',
+          website: 'google.com',
+        },
         requirements: { skills: ['JS', 'TS'], experience: 5 },
         compensation: {
           salaryMin: 100000,
@@ -208,8 +224,17 @@ describe('JobService', () => {
       mockSource1ApiProvider.getJobs.mockResolvedValue([externalJob]);
       mockSource2ApiProvider.getJobs.mockResolvedValue([]);
 
-      const location = { ...externalJob.location, id: 'loc1' };
-      const employer = { ...externalJob.employer, id: 'emp1' };
+      const location = {
+        ...externalJob.location,
+        id: 'loc1',
+      };
+      const employer = {
+        ...externalJob.employer,
+        id: 'emp1',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
+      };
 
       // Mock getOrCreate calls
       jest.spyOn(service, 'getOrCreateLocation').mockResolvedValue(location);

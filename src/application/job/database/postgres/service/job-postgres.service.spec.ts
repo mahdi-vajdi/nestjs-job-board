@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JobPostgresService } from './job-postgres.service';
-import { getRepositoryToken } from '@nestjs/typeorm';
+import { getDataSourceToken, getRepositoryToken } from '@nestjs/typeorm';
 import { EmployerEntity } from '../entities/employer.entity';
 import { DataSource, Repository } from 'typeorm';
 import { LocationEntity } from '../entities/location.entity';
@@ -70,7 +70,7 @@ describe('JobPostgresService', () => {
           useValue: mockRequirementRepository,
         },
         {
-          provide: DataSource,
+          provide: getDataSourceToken(DatabaseType.POSTGRES),
           useValue: mockDataSource,
         },
       ],
@@ -92,7 +92,7 @@ describe('JobPostgresService', () => {
     requirementRepository = module.get<Repository<RequirementEntity>>(
       getRepositoryToken(RequirementEntity, DatabaseType.POSTGRES),
     );
-    dataSource = module.get<DataSource>(DataSource);
+    dataSource = module.get<DataSource>(getDataSourceToken(DatabaseType.POSTGRES));
   });
 
   it('should be defined', () => {

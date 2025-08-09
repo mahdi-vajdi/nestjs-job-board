@@ -80,7 +80,8 @@ describe('JobScheduleService', () => {
       );
 
       // Check if the job's start method was called
-      const cronJobInstance = (CronJob as jest.Mock).mock.results[0].value;
+      const cronJobInstance = (CronJob as unknown as jest.Mock).mock.results[0]
+        .value;
       expect(cronJobInstance.start).toHaveBeenCalled();
     });
 
@@ -88,7 +89,7 @@ describe('JobScheduleService', () => {
       service.onModuleInit();
 
       // Get the onTick function from the CronJob mock
-      const cronJobInstance = (CronJob as jest.Mock).mock.results[0].value;
+      const cronJobInstance = (CronJob as unknown as jest.Mock).mock.results[0].value;
       const onTick = cronJobInstance.onTick;
 
       // Manually trigger the cron job's task
